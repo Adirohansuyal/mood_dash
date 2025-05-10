@@ -37,13 +37,11 @@ encoded_img = get_base64_of_image(image_path)
 st.markdown(f"""
     <style>
     .stApp {{
-        background-image: url("data:image/jpeg;base64,{encoded_img}");
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
+        background: linear-gradient(to bottom, darkgreen, lightgreen); /* Gradient background */
     }}
     body {{
         font-family: 'Segoe UI', sans-serif;
+        color: orange;
     }}
     .main {{
         background-color: rgba(255, 255, 255, 0.9);
@@ -51,9 +49,14 @@ st.markdown(f"""
         padding: 2rem;
         margin: 2rem;
         box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+        color: orange;
     }}
-    h1, h2 {{
-        color: #333;
+    h1 {{
+        color: darkorange;
+        font-weight: 600;
+    }}
+    h2 {{
+        color: orange;
         font-weight: 600;
     }}
     .stButton button {{
