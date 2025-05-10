@@ -1,8 +1,8 @@
+opencv-python-headless>=4.5.3.56
+deepface
 streamlit
-opencv-python
-numpy
 pandas
+numpy
 matplotlib
 seaborn
-deepface
-pillow
+Pillow
