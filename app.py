@@ -3,7 +3,7 @@ import base64
 
 # Set page configuration (must be the first Streamlit command)
 st.set_page_config(
-    page_title="AI Mood Analyzer",
+    page_title="AI Mod Analyzer",
     page_icon="😊",
     layout="wide"
 )
