@@ -262,7 +262,7 @@ def show_mood_analysis():
 
 # Main application UI
 def main():
-    st.title("AI Mood Analyzer 😊😢😠")
+    st.title("AI Mod Analyzer 😊😢😠")
     
     # Create tabs for different sections
     tab1, tab2, tab3 = st.tabs(["Capture Mood", "Mood History", "Settings"])
