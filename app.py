@@ -1,5 +1,7 @@
 import streamlit as st
 import base64
+import requests  # Add this import for API calls
+import requests
 
 # Set page configuration (must be the first Streamlit command)
 st.set_page_config(
@@ -128,6 +130,86 @@ def get_emotion_emoji(emotion):
         "unknown": "❓"
     }
     return emotion_emojis.get(emotion.lower(), "❓")
+
+# Gemini API key (hardcoded)
+GEMINI_API_KEY = "AIzaSyAkAiScNmPHnN06xfoSwGf4htaKRCRofek"
+
+# Function to interact with Gemini API
+def get_gemini_insights(mood: str) -> list[str]:
+    """
+    Call the Gemini 1.5 Flash model to get 5 mood-based insights.
+    """
+    try:
+        # 1. v1beta generateContent endpoint for gemini-1.5-flash :contentReference[oaicite:0]{index=0}
+        url = (
+            "https://generativelanguage.googleapis.com"
+            f"/v1beta/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
+        )
+
+        # 2. Build the request body
+        payload = {
+            "contents": [
+                {
+                    "role": "user",
+                    "parts": [
+                        {
+                            "text": (
+                                f"My current mood is “{mood}.” "
+                                "Please give me 5 concise, actionable tips "
+                                "to improve or maintain this mood."
+                            )
+                        }
+                    ]
+                }
+            ],
+            # 3. Optional: control sampling & length
+            "generationConfig": {
+                "temperature": 0.7,
+                "topP": 0.8,
+                "topK": 40,
+                "maxOutputTokens": 200
+            }
+        }
+
+        # 4. POST and error‑check
+        resp = requests.post(url, json=payload, headers={"Content-Type": "application/json"})
+        resp.raise_for_status()
+
+        data = resp.json()
+        candidates = data.get("candidates", [])
+        if not candidates:
+            return ["No insights returned."]
+
+        # 5. Extract text parts :contentReference[oaicite:1]{index=1}
+        parts = candidates[0]["content"]["parts"]
+        full_text = "".join(part.get("text", "") for part in parts)
+
+        # Split into non‑empty lines, strip bullets or dashes
+        lines = [
+            line.strip("‑–•- ").strip()
+            for line in full_text.split("\n")
+            if line.strip()
+        ]
+        return lines[:5]
+
+    except requests.exceptions.HTTPError as http_err:
+        st.error(f"HTTP error from Gemini API: {http_err}")
+    except Exception as e:
+        st.error(f"Error fetching insights: {e}")
+
+    return ["Unable to fetch insights at the moment."]
+
+# Function to display the chatbot
+def gemini_chatbot(mood):
+    st.subheader("💬 AI Chatbot")
+    st.write(f"The chatbot has analyzed your mood as **{mood}**. Here are 5 insights for you:")
+
+    # Fetch insights from Gemini API
+    insights = get_gemini_insights(mood)
+
+    # Display insights
+    for i, insight in enumerate(insights, start=1):
+        st.write(f"{i}. {insight}")
 
 # Function to display historical mood data
 def show_mood_analysis():
@@ -304,6 +386,9 @@ def main():
                 save_mood_data()
                 
                 st.success("Mood recorded successfully!")
+                
+                # Trigger chatbot interaction
+                gemini_chatbot(emotion)
         
         with col2:
             # Tips for better mood analysis

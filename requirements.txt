@@ -1,9 +1,10 @@
+streamlit
 opencv-python-headless>=4.5.3.56
 deepface
-streamlit
 pandas
 numpy
 matplotlib
 seaborn
 Pillow
-tf-keras 
+tf-keras
+requests
