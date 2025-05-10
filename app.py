@@ -26,7 +26,7 @@ import streamlit as st
 st.markdown(f"""
     <style>
     .stApp {{
-        background: linear-gradient(to bottom, darkgreen, lightgreen); /* Gradient background */
+        background: linear-gradient(135deg, darkblue, lightblue); /* Diagonal gradient background */
     }}
     body {{
         font-family: 'Segoe UI', sans-serif;
